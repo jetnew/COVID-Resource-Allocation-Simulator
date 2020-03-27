@@ -1,7 +1,6 @@
 # Agent-Based Modelling for Hospital Resource Allocation in Viral Crises
 
-![image](https://user-images.githubusercontent.com/27071473/77757963-230ca980-706d-11ea-9dfc-32c0edeaa74c.png)
-
+![covid-sim](https://user-images.githubusercontent.com/27071473/77758306-b0e89480-706d-11ea-9732-68febe6f47e7.png)
 
 ## Context
 
