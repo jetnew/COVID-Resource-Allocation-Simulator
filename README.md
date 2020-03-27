@@ -1,5 +1,8 @@
 # Agent-Based Modelling for Hospital Resource Allocation in Viral Crises
 
+![image](https://user-images.githubusercontent.com/27071473/77757963-230ca980-706d-11ea-9dfc-32c0edeaa74c.png)
+
+
 ## Context
 
 In viral crises such as the current COVID-19 situation, resources are limited in hospitals, such as hospital beds and staff. To exacerbate the situation, viruses can be transmitted as patients move from one station in the hospital to another.
