@@ -128,19 +128,21 @@ class Simulation:
 
 
 class AgentFactory:
-    def __init__(self, creation_rate, infected_rate, journeys, entrance):
+    def __init__(self, creation_rate, infected_rate, transmission_rate, journeys, entrance):
         self.creation_rate = creation_rate
         self.infected_rate = infected_rate
+        self.transmission_rate = transmission_rate
         self.agents = []
         self.journeys = journeys
         self.entrance = entrance
 
     def create_agent(self, t):
-        if t % self.creation_rate == 0:
+        created = True if random.random() < self.creation_rate else False
+        if created:
             infected = True if random.random() < self.infected_rate else False
             agent = Agent(role="Patient",
                           infected=infected,
-                          transmission_rate=0.3,
+                          transmission_rate=self.transmission_rate,
                           curr_coord=(9, 5),
                           curr_location=self.entrance,
                           journey=random.choice(self.journeys),

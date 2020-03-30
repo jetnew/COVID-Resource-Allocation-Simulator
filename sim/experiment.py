@@ -2,26 +2,10 @@ from env import Location, Simulation, AgentFactory
 from agent import Agent
 import pandas as pd
 import itertools
+import tqdm
 
 # ==============================================================
 # ADJUST PARAMETERS HERE
-parameter_names = [
-    'time_req_entrance',
-    'time_req_pharmacy',
-    'time_req_registration',
-    'time_req_waiting_area',
-    'size_entrance_x',
-    'size_entrance_y',
-    'size_pharmacy_x',
-    'size_pharmacy_y',
-    'size_registration_x',
-    'size_registration_y',
-    'size_waiting_area_x',
-    'size_waiting_area_y',
-    'creation_rate',
-    'infected_rate',
-]
-
 experiment_parameters = {
     # Time required
     'time_req_entrance': [10],
@@ -39,16 +23,22 @@ experiment_parameters = {
     'size_registration_x': [5],
     'size_registration_y': [5],
 
-    'size_waiting_area_x': [10],
+    'size_waiting_area_x': [10+i for i in range(50)],
     'size_waiting_area_y': [10],
 
     # Agent properties
-    'creation_rate': [10, 9, 8, 7],
-    'infected_rate': [0.1, 0.2, 0.3, 0.4],
+    'creation_rate': [0.1],
+    'infected_rate': [0.1],
+    'transmission_rate': [0.1],
+}
+
+experiment_hyperparameters = {
+    'experiments_per_parameter_set': 100,
+    'epochs_per_experiment': 1000,
 }
 # DO NOT CHANGE ANYTHING BEYOND THIS POINT
 # ==============================================================
-
+parameter_names = [name for name in experiment_parameters]
 
 def initialise_experiment(**parameters):
     # Initialise the environment graph
@@ -88,6 +78,7 @@ def initialise_experiment(**parameters):
     # Agent Creation
     agent_factory = AgentFactory(creation_rate=parameters['creation_rate'],
                                  infected_rate=parameters['infected_rate'],
+                                 transmission_rate=parameters['transmission_rate'],
                                  journeys=journeys,
                                  entrance=entrance)
 
@@ -101,7 +92,9 @@ for stat in parameter_names + statistic_names:
 
 
 parameters = [experiment_parameters[para] for para in parameter_names]
-for parameter_list in list(itertools.product(*parameters)):
+parameter_permutation = list(itertools.product(*parameters))
+print(f"No. of permutations: {len(parameter_permutation)}")
+for parameter_list in tqdm.tqdm(parameter_permutation):
     parameter_set = {}
     for i, para in enumerate(parameter_names):
         parameter_set[para] = parameter_list[i]
@@ -110,15 +103,23 @@ for parameter_list in list(itertools.product(*parameters)):
     for para in parameter_set:
         experiment_data[para].append(parameter_set[para])
 
-    # Run simulation
-    entrance, agent_factory = initialise_experiment(**parameter_set)
-    sim = Simulation(location=entrance, agents=[])
-    sim.run(agent_factory=agent_factory,
-            epoch=1000)
-    sim.print_statistics()
+    # Run simulations
+    experiment_statistics = {}
+    for stat in statistic_names:
+        experiment_statistics[stat] = []
+    for exp_num in range(experiment_hyperparameters['experiments_per_parameter_set']):
+        entrance, agent_factory = initialise_experiment(**parameter_set)
+        sim = Simulation(location=entrance, agents=[])
+        sim.run(agent_factory=agent_factory,
+                epoch=experiment_hyperparameters['epochs_per_experiment'])
+        # sim.print_statistics()
+        for stat in statistic_names:
+            experiment_statistics[stat].append(sim.statistics[stat])
+    for stat in statistic_names:
+        experiment_statistics[stat] = sum(experiment_statistics[stat]) / len(experiment_statistics[stat])
 
     # Add experiment statistics to experiment data
     for stat in statistic_names:
-        experiment_data[stat].append(sim.statistics[stat])
+        experiment_data[stat].append(experiment_statistics[stat])
 
 pd.DataFrame(experiment_data).to_csv("data.csv", index=False)
