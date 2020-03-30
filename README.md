@@ -1,5 +1,7 @@
 # Agent-Based Modelling for Hospital Resource Allocation in Viral Crises
 
+This is a <b>school project</b>, and a <b>current ongoing work</b> to understand policy interventions and the extent to which they influence transmission in a building structure. It is currently a baseline experiment <b>without any reference to current research</b> on COVID-19, but stay tuned!
+
 <img src="https://user-images.githubusercontent.com/27071473/77895747-cea23d80-72a9-11ea-99c6-582c7c6db101.png" width="50%">
 <img src="https://user-images.githubusercontent.com/27071473/77895604-9c90db80-72a9-11ea-929d-b129a3af7e82.png" width="50%">
 
