@@ -13,11 +13,7 @@ renderer = Renderer(locations=locations,
 # Run simulation
 sim = Simulation(location=entrance, agents=[])
 sim.run(agent_factory=agent_factory,
-        renderer=renderer,
+        renderer=None,
         epoch=1000,
-        verbose=True)
-
-# sim.run(agent_factory=agent_factory,
-#         renderer=None,
-#         epoch=1000,
-#         verbose=True)
+        verbose=False)
+sim.print_statistics()

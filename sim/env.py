@@ -63,9 +63,8 @@ class Simulation:
 
     def print_statistics(self):
         print("==========Statistics==========")
-        print("Transmissions:", self.statistics['transmissions'])
-        print("Agents:", self.statistics['agents'])
-        print("Average Transmission:", self.statistics['transmissions']/self.statistics['agents'])
+        for key, value in self.statistics.items():
+            print(f"{key}: {value}")
 
     def step(self, verbose=False):
         self.t += 1
@@ -101,6 +100,9 @@ class Simulation:
         if verbose:
             self.print_state()
 
+    def compute_statistics(self):
+        self.statistics['average_transmissions'] = self.statistics['transmissions']/self.statistics['agents']
+
     def run(self, agent_factory, epoch=50, renderer=None, verbose=False):
         # Render environment
         if renderer:
@@ -119,6 +121,8 @@ class Simulation:
             # Update render
             if renderer:
                 renderer.update(self.agents)
+
+        self.compute_statistics()
         if verbose:
             self.print_statistics()
 

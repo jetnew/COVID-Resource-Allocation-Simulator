@@ -40,12 +40,13 @@ class Renderer:
         self.locations = locations
         self.agents = agents
         self.delay = delay
+
+    def render(self):
         pygame.init()
         gameDisplay = pygame.display.set_mode((800, 600))
         pygame.display.set_caption("Agent-Based Modelling for Hospital Resource Allocation in Viral Crises")
         self.gameDisplay = gameDisplay
 
-    def render(self):
         # Background
         self.gameDisplay.fill(black)
 
